@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Suisse";
+  src: url("../assets/fonts/SuisseIntl-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Suisse";
+  src: url("../assets/fonts/SuisseIntl-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Suisse";
+  src: url("../assets/fonts/SuisseIntl-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Suisse";
+  src: url("../assets/fonts/SuisseIntl-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@theme {
+  --font-display: Suisse, "sans-serif";
+  --shadow-hr: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  --animate-fade-in: fade-in 400ms ease backwards;
+  --animate-fade-out: fade-out 400ms ease forwards;
+
+  --animate-gradient-success-in: gradient-success-in 600ms ease-in-out;
+  --animate-gradient-success-out: gradient-success-out 600ms ease-in-out;
+
+  --animate-gradient-error-in: gradient-error-in 600ms ease-in-out;
+  --animate-gradient-error-out: gradient-error-out 600ms ease-in-out;
+
+  --animate-gradient-warning-in: gradient-warning-in 600ms ease-in-out;
+  --animate-gradient-warning-out: gradient-warning-out 600ms ease-in-out;
+
+  --animate-gradient-info-in: gradient-info-in 600ms ease-in-out;
+  --animate-gradient-info-out: gradient-info-out 600ms ease-in-out;
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes gradient-success-in {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-emerald-600) 0%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-emerald-600) 20%,
+        transparent
+      );
+    }
+  }
+
+  @keyframes gradient-success-out {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-emerald-600) 20%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-emerald-600) 0%,
+        transparent
+      );
+    }
+  }
+
+  @keyframes gradient-error-in {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-rose-600) 0%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-rose-600) 20%,
+        transparent
+      );
+    }
+  }
+
+  @keyframes gradient-error-out {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-rose-600) 20%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-rose-600) 0%,
+        transparent
+      );
+    }
+  }
+
+  @keyframes gradient-warning-in {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-yellow-600) 0%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-yellow-600) 20%,
+        transparent
+      );
+    }
+  }
+
+  @keyframes gradient-warning-out {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-yellow-600) 20%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-yellow-600) 0%,
+        transparent
+      );
+    }
+  }
+
+  @keyframes gradient-info-in {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-indigo-600) 0%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-indigo-600) 20%,
+        transparent
+      );
+    }
+  }
+
+  @keyframes gradient-info-out {
+    0% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-indigo-600) 20%,
+        transparent
+      );
+    }
+    100% {
+      --tw-gradient-from: color-mix(
+        in oklab,
+        var(--color-indigo-600) 0%,
+        transparent
+      );
+    }
+  }
+}
