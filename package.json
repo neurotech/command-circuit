@@ -21,6 +21,7 @@
     "date-fns": "^4.1.0",
     "lucide-react": "^0.555.0",
     "markdown-to-jsx": "^9.3.0",
+    "motion": "^12.23.25",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.4.0",
