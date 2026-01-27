@@ -71,7 +71,7 @@ export const DiscordTimestamp = () => {
               }}
             />
           </div>
-          <div className="grid grid-flow-dense grid-cols-3 gap-px rounded-sm border border-zinc-900">
+          <div className="grid select-none grid-flow-dense grid-cols-3 gap-px rounded-sm border border-zinc-900">
             {selectedDateTime &&
               DISCORD_FORMATS.map((fmt) => (
                 <TimestampFormatRow

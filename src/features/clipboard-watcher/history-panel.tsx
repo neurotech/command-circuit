@@ -55,13 +55,15 @@ export const HistoryPanel = ({
     [onItemClick],
   );
 
+  const EmptyHistory = () => (
+    <div className="rounded-sm bg-zinc-600/30 px-2 py-1 text-center text-shadow-2xs text-xs text-zinc-400">
+      Nothing captured yet.
+    </div>
+  );
+
   return (
     <div className="flex select-none flex-col gap-0.5">
-      {history.length === 0 ? (
-        <div className="rounded-sm bg-zinc-600/30 px-2 py-1 text-center text-shadow-2xs text-xs text-zinc-400">
-          Nothing captured yet.
-        </div>
-      ) : null}
+      {history.length === 0 ? <EmptyHistory /> : null}
       {history
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .map((item) => {

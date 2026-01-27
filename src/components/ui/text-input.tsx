@@ -1,20 +1,26 @@
 import { type ComponentProps, forwardRef, type ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 type TextInputProps = {
-  label: string | ReactNode;
+  label?: string | ReactNode;
   valid?: boolean;
+  containerClassName?: string;
 } & ComponentProps<"input">;
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, valid = false, ...props }, ref) => {
+  ({ label, valid = false, containerClassName, ...props }, ref) => {
     return (
-      <div className="group flex flex-col gap-1.5">
-        <div
-          className="select-none text-sm text-zinc-400 group-focus-within:text-white data-[valid=false]:text-rose-200 group-focus-within:data-[valid=false]:text-rose-400"
-          data-valid={valid}
-        >
-          {label}
-        </div>
+      <div
+        className={twMerge("group flex flex-col gap-1.5", containerClassName)}
+      >
+        {label ? (
+          <div
+            className="select-none text-sm text-zinc-400 group-focus-within:text-white data-[valid=false]:text-rose-200 group-focus-within:data-[valid=false]:text-rose-400"
+            data-valid={valid}
+          >
+            {label}
+          </div>
+        ) : null}
         <input
           ref={ref}
           {...props}
