@@ -1,9 +1,5 @@
-import { Fingerprint, Logs, type LucideProps } from "lucide-react";
-import {
-  type ForwardRefExoticComponent,
-  type RefAttributes,
-  useContext,
-} from "react";
+import { Cog, Fingerprint, Logs, type LucideProps } from "lucide-react";
+import { type ForwardRefExoticComponent, type RefAttributes, use } from "react";
 import { Button } from "../../../components/ui/button";
 import { ConfigContext } from "../../../context/config-context";
 import { NavigationMenuItem } from "./navigation-item";
@@ -24,13 +20,14 @@ export type NavigationItem = {
 const navigationItems: NavigationItem[] = [
   { id: 1, icon: Fingerprint, label: "Credentials" },
   { id: 2, icon: Logs, label: "Logs" },
+  { id: 3, icon: Cog, label: "Debug" },
 ];
 
 export const Navigation = ({ activeItem, setActiveItem }: NavigationProps) => {
-  const { toggleConfigDialog } = useContext(ConfigContext);
+  const { toggleConfigDialog } = use(ConfigContext);
 
   return (
-    <div className="col-span-1 flex select-none flex-col justify-between gap-3 rounded-md border border-zinc-700/30 bg-zinc-900/80 p-2">
+    <div className="col-span-1 flex select-none flex-col justify-between gap-3 rounded-l-md border border-zinc-700/30 bg-zinc-950/40 p-3">
       <div className="flex flex-1 flex-col gap-0.5">
         {navigationItems.map((item) => (
           <NavigationMenuItem

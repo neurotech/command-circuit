@@ -24,12 +24,12 @@ export const NavigationMenuItem = ({
       type="button"
       onClick={handleClick}
       className={twMerge(
-        "group flex cursor-pointer flex-row items-center gap-1 rounded-xs py-1 pt-1 pr-0 pl-1.5 text-xs text-zinc-400 transition-colors hover:bg-indigo-500/10 hover:text-indigo-400",
+        "group flex cursor-pointer flex-row items-center gap-2 rounded-xs py-1 pt-1 pr-0 pl-1.5 text-sm text-zinc-400 transition-colors hover:bg-indigo-500/10 hover:text-indigo-400",
         active ? "bg-indigo-500/10 text-indigo-100 hover:text-indigo-50" : "",
       )}
     >
       <Icon
-        size={12}
+        size={14}
         className={twMerge(
           "text-zinc-700 transition-colors group-hover:text-indigo-300",
           active ? "text-indigo-300 group-hover:text-indigo-100" : "",
