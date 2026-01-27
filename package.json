@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri",
+    "tauri": "NO_STRIP=true tauri",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
