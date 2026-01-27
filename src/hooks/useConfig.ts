@@ -13,9 +13,13 @@ export const useConfig = () => {
   const [store, setStore] = useState<Store | undefined>();
 
   const insert = useCallback(
-    async <T>(key: ConfigKey, value: T) => {
-      if (!store) return [];
+    async <T extends { id: string }>(key: ConfigKey, value: T) => {
+      if (!store) return;
       const previous = ((await store.get(key)) ?? []) as T[];
+      // Prevent duplicates by checking the store directly
+      if (previous.some((item) => item.id === value.id)) {
+        return;
+      }
       await store.set(key, [...previous, value]);
     },
     [store],

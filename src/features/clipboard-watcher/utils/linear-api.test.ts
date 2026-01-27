@@ -76,9 +76,7 @@ describe("getIssue", () => {
 
     const result = await getIssue("ENG-456", "test-token");
 
-    expect(result.branch_name).toBe(
-      "ENG-456-fix-bug-with-special-chars-stuff",
-    );
+    expect(result.branch_name).toBe("ENG-456-fix-bug-with-special-chars-stuff");
   });
 
   it("throws error on API failure", async () => {
