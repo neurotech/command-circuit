@@ -4,7 +4,7 @@ import {
   LoaderPinwheel,
   TriangleAlert,
 } from "lucide-react";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
 import { TextInput } from "../../../components/ui/text-input";
@@ -12,7 +12,7 @@ import { AlertContext } from "../../../context/alert-context";
 import { ConfigContext } from "../../../context/config-context";
 
 export const Credentials = () => {
-  const { sendAlert } = useContext(AlertContext);
+  const { sendAlert } = use(AlertContext);
   const {
     loading,
     credentials,
@@ -20,22 +20,16 @@ export const Credentials = () => {
     saveCredentials,
     configValidation,
     getCredentials,
-  } = useContext(ConfigContext);
+  } = use(ConfigContext);
 
   const [github, setGithub] = useState<string>(credentials.github ?? "");
   const [linear, setLinear] = useState<string>(credentials.linear ?? "");
 
   const handleSave = useCallback(async () => {
     await saveCredentials({ github, linear });
-    sendAlert({ type: "success", content: "Credentials saved successfully" });
-
+    sendAlert({ type: "success", content: "Credentials saved successfully." });
     await getCredentials();
   }, [github, linear, saveCredentials, getCredentials, sendAlert]);
-
-  useEffect(() => {
-    setGithub(credentials.github ?? "");
-    setLinear(credentials.linear ?? "");
-  }, [credentials]);
 
   useEffect(() => {
     const keyboardListener = (event: KeyboardEvent) => {
@@ -56,7 +50,7 @@ export const Credentials = () => {
   }, [configDialogOpen, handleSave]);
 
   return (
-    <div className="col-span-2 flex flex-col gap-2">
+    <>
       <Card
         header="Credentials"
         headerIcon={<Fingerprint size={16} />}
@@ -88,20 +82,15 @@ export const Credentials = () => {
               valid={loading || linear.length > 0}
               disabled={loading}
             />
-
-            <div className="flex justify-end">
-              <Button
-                variant={"emerald"}
-                onClick={handleSave}
-                shortcut={"⌘ ⏎"}
-                small
-              >
-                Save
-              </Button>
-            </div>
           </div>
         }
       />
-    </div>
+
+      <div className="flex justify-end">
+        <Button variant={"emerald"} onClick={handleSave} shortcut={"⌘ ⏎"} small>
+          Save
+        </Button>
+      </div>
+    </>
   );
 };
