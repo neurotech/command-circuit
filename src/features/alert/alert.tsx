@@ -1,17 +1,10 @@
 import { cva } from "class-variance-authority";
-import {
-  AlertTriangle,
-  Bomb,
-  CheckCircleIcon,
-  Info,
-  type LucideProps,
-} from "lucide-react";
-import {
-  type ForwardRefExoticComponent,
-  type RefAttributes,
-  useContext,
-} from "react";
+import { use } from "react";
 import { twMerge } from "tailwind-merge";
+import { AnimatedBell } from "../../components/ui/icons/animated-bell";
+import { AnimatedCircleCheck } from "../../components/ui/icons/animated-circle-check";
+import { AnimatedInfo } from "../../components/ui/icons/animated-info";
+import { AnimatedTriangleAlert } from "../../components/ui/icons/animated-triangle-alert";
 import { AlertContext, type AlertSchema } from "../../context/alert-context";
 
 const alertVariants = cva(
@@ -74,7 +67,7 @@ const alertVariants = cva(
   },
 );
 
-const iconVariants = cva("", {
+const iconVariants = cva("opacity-0", {
   variants: {
     type: {
       success: "text-emerald-200 shadow-md",
@@ -83,8 +76,10 @@ const iconVariants = cva("", {
       info: "text-indigo-200",
     },
     active: {
-      true: "animate-fade-in [animation-delay:150ms]",
-      false: "animate-fade-out [animation-delay:300ms]",
+      // true: "animate-fade-in [animation-delay:150ms]",
+      // false: "animate-fade-out [animation-delay:300ms]",
+      true: "",
+      false: "",
     },
   },
   defaultVariants: {
@@ -110,21 +105,22 @@ const contentVariants = cva("mix-blend-plus-lighter", {
   },
 });
 
-const iconMap: Record<
-  AlertSchema["type"],
-  ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
-  >
-> = {
-  success: CheckCircleIcon,
-  error: Bomb,
-  warning: AlertTriangle,
-  info: Info,
+const getIcon = (type: AlertSchema["type"]) => {
+  switch (type) {
+    case "success":
+      return AnimatedCircleCheck;
+    case "error":
+      return AnimatedTriangleAlert;
+    case "warning":
+      return AnimatedBell;
+    case "info":
+      return AnimatedInfo;
+  }
 };
 
 export const Alert = () => {
-  const { alert, active } = useContext(AlertContext);
-  const Icon = alert ? iconMap[alert.type] : undefined;
+  const { alert, active } = use(AlertContext);
+  const Icon = alert ? getIcon(alert.type) : undefined;
 
   return (
     <div className={twMerge(alertVariants({ type: alert?.type, active }))}>
@@ -132,6 +128,7 @@ export const Alert = () => {
         <Icon
           size={18}
           className={iconVariants({ type: alert?.type, active })}
+          isAnimated={active}
         />
       ) : null}
       <div className={twMerge(contentVariants({ type: alert?.type, active }))}>
