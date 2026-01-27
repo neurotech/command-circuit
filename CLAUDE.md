@@ -17,8 +17,9 @@ pnpm tauri build  # Build production Tauri app
 
 **Linting/Formatting (Biome):**
 ```bash
-npx @biomejs/biome check .           # Check all files
-npx @biomejs/biome check --write .   # Auto-fix issues
+pnpm lint          # Check for issues
+pnpm lint:fix      # Auto-fix issues
+pnpm format        # Format files
 ```
 
 ## Tech Stack
