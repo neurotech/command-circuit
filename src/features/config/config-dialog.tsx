@@ -1,6 +1,7 @@
-import { use, useCallback, useEffect, useState } from "react";
+import { use, useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ConfigContext } from "../../context/config-context";
+import { useKeyboardShortcut } from "../../hooks/useKeyboardShortcut";
 import { Credentials } from "./components/credentials";
 import { DebugMode } from "./components/debug-mode";
 import { Navigation } from "./components/navigation";
@@ -14,8 +15,6 @@ export const ConfigDialog = () => {
     switch (activeItem) {
       case 1:
         return <Credentials />;
-      case 2:
-        return <>todo</>;
       case 3:
         return <DebugMode />;
       default:
@@ -23,23 +22,12 @@ export const ConfigDialog = () => {
     }
   }, [activeItem]);
 
-  useEffect(() => {
-    const keyboardListener = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        toggleConfigDialog();
-      }
-    };
-
-    if (configDialogOpen) {
-      document.addEventListener("keyup", keyboardListener);
-    } else {
-      document.removeEventListener("keyup", keyboardListener);
-    }
-
-    return () => {
-      document.removeEventListener("keyup", keyboardListener);
-    };
-  }, [configDialogOpen, toggleConfigDialog]);
+  useKeyboardShortcut({
+    key: "Escape",
+    eventType: "keyup",
+    enabled: configDialogOpen,
+    handler: toggleConfigDialog,
+  });
 
   return configDialogOpen ? (
     <div

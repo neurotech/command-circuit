@@ -188,10 +188,6 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
   }, [computeTodayIsLater]);
 
   useEffect(() => {
-    computeTodayIsLater();
-  }, [computeTodayIsLater]);
-
-  useEffect(() => {
     refreshClipboardHistory();
   }, [refreshClipboardHistory]);
 

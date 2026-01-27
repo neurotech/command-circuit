@@ -1,6 +1,19 @@
 import { fetch } from "@tauri-apps/plugin-http";
 import type { HistoryItem } from "../history-panel";
 
+type LinearIssueResponse = {
+  data?: {
+    issue?: {
+      title: string;
+      url: string;
+      state: {
+        name: string;
+      };
+    };
+  };
+  errors?: Array<{ message: string }>;
+};
+
 export const getIssue = async (
   key: string,
   token?: string,
@@ -31,8 +44,23 @@ export const getIssue = async (
     body,
   });
 
-  const data = await response.json();
-  const issue = data.data.issue;
+  if (!response.ok) {
+    throw new Error(
+      `Linear API error: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const data: LinearIssueResponse = await response.json();
+
+  if (data.errors && data.errors.length > 0) {
+    throw new Error(`Linear GraphQL error: ${data.errors[0].message}`);
+  }
+
+  const issue = data.data?.issue;
+
+  if (!issue) {
+    throw new Error("Invalid Linear API response: issue not found");
+  }
 
   return {
     id: key,

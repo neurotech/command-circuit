@@ -4,12 +4,13 @@ import {
   LoaderPinwheel,
   TriangleAlert,
 } from "lucide-react";
-import { use, useCallback, useEffect, useState } from "react";
+import { use, useCallback, useState } from "react";
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
 import { TextInput } from "../../../components/ui/text-input";
 import { AlertContext } from "../../../context/alert-context";
 import { ConfigContext } from "../../../context/config-context";
+import { useKeyboardShortcut } from "../../../hooks/useKeyboardShortcut";
 
 export const Credentials = () => {
   const { sendAlert } = use(AlertContext);
@@ -31,23 +32,13 @@ export const Credentials = () => {
     await getCredentials();
   }, [github, linear, saveCredentials, getCredentials, sendAlert]);
 
-  useEffect(() => {
-    const keyboardListener = (event: KeyboardEvent) => {
-      if (event.metaKey && event.key === "Enter") {
-        handleSave();
-      }
-    };
-
-    if (configDialogOpen) {
-      document.addEventListener("keyup", keyboardListener);
-    } else {
-      document.removeEventListener("keyup", keyboardListener);
-    }
-
-    return () => {
-      document.removeEventListener("keyup", keyboardListener);
-    };
-  }, [configDialogOpen, handleSave]);
+  useKeyboardShortcut({
+    key: "Enter",
+    metaKey: true,
+    eventType: "keyup",
+    enabled: configDialogOpen,
+    handler: handleSave,
+  });
 
   return (
     <>

@@ -1,5 +1,5 @@
 import "./App.css";
-import { use, useEffect, useMemo } from "react";
+import { use, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -9,6 +9,7 @@ import { Alert } from "../features/alert/alert";
 import { ClipboardWatcher } from "../features/clipboard-watcher/clipboard-watcher";
 import { ConfigDialog } from "../features/config/config-dialog";
 import { GoodMorning } from "../features/good-morning/good-morning";
+import { useKeyboardShortcut } from "../hooks/useKeyboardShortcut";
 
 function App() {
   const {
@@ -23,19 +24,12 @@ function App() {
     return !loading && !configValidation.credentials.valid && !configDialogOpen;
   }, [loading, configValidation.credentials.valid, configDialogOpen]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (!configDialogOpen && event.metaKey && event.key === ",") {
-        toggleConfigDialog();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [configDialogOpen, toggleConfigDialog]);
+  useKeyboardShortcut({
+    key: ",",
+    metaKey: true,
+    enabled: !configDialogOpen,
+    handler: toggleConfigDialog,
+  });
 
   return (
     <div

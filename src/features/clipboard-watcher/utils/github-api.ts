@@ -1,5 +1,11 @@
 import type { HistoryItem } from "../history-panel";
 
+type GitHubPRResponse = {
+  title: string;
+  html_url: string;
+  message?: string;
+};
+
 export const getGitHubMetadata = (text: string) => {
   const url = new URL(text);
   const owner = url.pathname.split("/")[1];
@@ -35,7 +41,17 @@ export const getPR = async (
     },
   );
 
-  const pr = await response.json();
+  if (!response.ok) {
+    throw new Error(
+      `GitHub API error: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const pr: GitHubPRResponse = await response.json();
+
+  if (!pr.title || !pr.html_url) {
+    throw new Error("Invalid GitHub API response: missing required fields");
+  }
 
   return {
     id: `PR-${id}`,

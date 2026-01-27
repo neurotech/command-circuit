@@ -64,31 +64,29 @@ export const ClipboardWatcher = () => {
           setStatus("match");
 
           if (parseResult.type === "linear") {
-            getIssue(parseResult.id, credentials.linear)
-              .then((item) => {
-                insert<HistoryItem>("clipboard-history", item)
-                  .then(() => refreshClipboardHistory())
-                  .catch((error) => {
-                    console.error(error);
-                  });
-                sendAlert({
-                  type: "success",
-                  content: "Issue fetched successfully.",
-                });
-              })
-              .catch((_) => {
-                sendAlert({ type: "error", content: "Failed to fetch issue." });
-                setStatus("error");
+            try {
+              const item = await getIssue(parseResult.id, credentials.linear);
+              await insert<HistoryItem>("clipboard-history", item);
+              await refreshClipboardHistory();
+              sendAlert({
+                type: "success",
+                content: "Issue fetched successfully.",
               });
+            } catch (error) {
+              console.error(error);
+              sendAlert({ type: "error", content: "Failed to fetch issue." });
+              setStatus("error");
+            }
           }
 
           if (parseResult.type === "github") {
-            const item = await getPR(text, credentials.github);
-            insert<HistoryItem>("clipboard-history", item)
-              .then(() => refreshClipboardHistory())
-              .catch((error) => {
-                console.error(error);
-              });
+            try {
+              const item = await getPR(text, credentials.github);
+              await insert<HistoryItem>("clipboard-history", item);
+              await refreshClipboardHistory();
+            } catch (error) {
+              console.error(error);
+            }
           }
         } else {
           resetStatus();
@@ -148,7 +146,9 @@ export const ClipboardWatcher = () => {
       headerRight={
         <Button
           small
-          disabled={!configValidation.credentials.valid || history.length === 0}
+          disabled={
+            !configValidation.credentials.valid || clipboardHistory.length === 0
+          }
           onClick={() => {
             void clear("clipboard-history");
             refreshClipboardHistory();
