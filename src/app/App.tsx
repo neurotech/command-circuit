@@ -8,6 +8,7 @@ import { ConfigContext } from "../context/config-context";
 import { Alert } from "../features/alert/alert";
 import { ClipboardWatcher } from "../features/clipboard-watcher/clipboard-watcher";
 import { ConfigDialog } from "../features/config/config-dialog";
+import { DiscordTimestamp } from "../features/discord-timestamp/discord-timestamp";
 import { GoodMorning } from "../features/good-morning/good-morning";
 import { useKeyboardShortcut } from "../hooks/useKeyboardShortcut";
 
@@ -49,6 +50,7 @@ function App() {
       ) : null}
       <main className="relative flex flex-1 flex-col gap-2 overflow-y-auto p-2">
         <ClipboardWatcher />
+        <DiscordTimestamp />
         <GoodMorning />
         {debugMode ? (
           <Card
