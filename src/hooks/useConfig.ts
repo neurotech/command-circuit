@@ -3,9 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import type { HistoryItem } from "../features/clipboard-watcher/history-panel";
 
 type ConfigKey =
-  | "clipboard-watcher-history"
+  | "clipboard-history"
   | "github-api-key"
-  | "linear-api-key";
+  | "linear-api-key"
+  | "today"
+  | "debug-mode";
 
 export const useConfig = () => {
   const [store, setStore] = useState<Store | undefined>();
@@ -60,9 +62,11 @@ export const useConfig = () => {
         const store = await load("config.json", {
           autoSave: true,
           defaults: {
-            "clipboard-watcher-history": [],
+            "clipboard-history": [],
             "linear-api-key": "",
             "github-api-key": "",
+            today: undefined,
+            "debug-mode": false,
           },
         });
         setStore(store);
