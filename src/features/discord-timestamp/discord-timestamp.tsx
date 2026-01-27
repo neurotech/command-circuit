@@ -1,6 +1,6 @@
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { format } from "date-fns";
-import { Clock, RotateCcw } from "lucide-react";
+import { Clock, Eye, EyeClosed, RotateCcw } from "lucide-react";
 import { use, useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
@@ -13,6 +13,7 @@ export const DiscordTimestamp = () => {
   const { sendAlert } = use(AlertContext);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [show, setShow] = useState(true);
 
   const setToNow = useCallback(() => {
     const now = new Date();
@@ -44,10 +45,16 @@ export const DiscordTimestamp = () => {
       header="Discord Timestamp"
       headerIcon={<Clock size={16} />}
       headerRight={
-        <Button small onClick={setToNow}>
-          <RotateCcw size={14} />
-        </Button>
+        <div className="flex gap-1">
+          <Button small onClick={setToNow}>
+            <RotateCcw size={14} />
+          </Button>
+          <Button small onClick={() => setShow(!show)}>
+            {show ? <Eye size={14} /> : <EyeClosed size={14} />}
+          </Button>
+        </div>
       }
+      hideContent={!show}
       content={
         <div className="flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-3 text-sm">

@@ -1,5 +1,5 @@
 import { writeText } from "@tauri-apps/plugin-clipboard-manager";
-import { Type } from "lucide-react";
+import { Eye, EyeClosed, Type } from "lucide-react";
 import { use, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
@@ -11,6 +11,7 @@ import { TEXT_STYLES } from "./utils/unicode-mappings";
 export const TextFormatter = () => {
   const { sendAlert } = use(AlertContext);
   const [inputText, setInputText] = useState("");
+  const [show, setShow] = useState(true);
 
   const handleCopy = (styleName: string, styledText: string) => {
     void writeText(styledText);
@@ -24,6 +25,12 @@ export const TextFormatter = () => {
     <Card
       header="Fancy Text"
       headerIcon={<Type size={16} />}
+      headerRight={
+        <Button small onClick={() => setShow(!show)}>
+          {show ? <Eye size={14} /> : <EyeClosed size={14} />}
+        </Button>
+      }
+      hideContent={!show}
       content={
         <div className="flex flex-col gap-3">
           <div className="flex flex-row items-center justify-between gap-2">
