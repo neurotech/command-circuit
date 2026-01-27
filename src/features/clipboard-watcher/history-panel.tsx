@@ -25,7 +25,7 @@ export type HistoryItem = {
 
 type HistoryProps = {
   history: HistoryItem[];
-  onItemClick: () => void;
+  onItemClick: (content: string) => void;
   onRemoveClick: (id: string) => void;
   activeItem?: string;
 };
@@ -37,9 +37,20 @@ export const HistoryPanel = ({
   activeItem,
 }: HistoryProps) => {
   const copyText = useCallback(
-    async (text: string) => {
-      await writeText(text);
-      onItemClick();
+    async (
+      item: HistoryItem,
+      contentType: "Markdown" | "PR name" | "Branch name" = "Markdown",
+    ) => {
+      if (contentType === "Markdown") {
+        await writeText(item.markdown);
+      } else if (contentType === "PR name" && item.pr_name) {
+        await writeText(item.pr_name);
+      } else if (contentType === "Branch name" && item.branch_name) {
+        await writeText(item.branch_name);
+      }
+
+      const content = `${contentType} for ${item.type === "linear" ? "Linear issue" : "GitHub"} ${item.id} copied to clipboard.`;
+      onItemClick(content);
     },
     [onItemClick],
   );
@@ -64,8 +75,8 @@ export const HistoryPanel = ({
             >
               <button
                 className="group flex flex-1 cursor-pointer select-none flex-row overflow-hidden text-xs"
-                onClick={() => copyText(item.markdown)}
-                onKeyUp={() => copyText(item.markdown)}
+                onClick={() => copyText(item)}
+                onKeyUp={() => copyText(item)}
                 type="button"
               >
                 <div
@@ -109,7 +120,7 @@ export const HistoryPanel = ({
                   <FlatButton
                     variant={"blue"}
                     isActive={isActive}
-                    onClick={() => copyText(item.branch_name ?? "")}
+                    onClick={() => copyText(item, "Branch name")}
                   >
                     <Split className="size-3" />
                   </FlatButton>
@@ -119,7 +130,7 @@ export const HistoryPanel = ({
                   <FlatButton
                     variant={"green"}
                     isActive={isActive}
-                    onClick={() => copyText(item.pr_name ?? "")}
+                    onClick={() => copyText(item, "PR name")}
                   >
                     <GitPullRequestCreateArrow className="size-3" />
                   </FlatButton>

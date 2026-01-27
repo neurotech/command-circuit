@@ -1,12 +1,11 @@
 import { readText, writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { Clipboard } from "lucide-react";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { AlertContext } from "../../context/alert-context";
 import { ConfigContext } from "../../context/config-context";
 import { useConfig } from "../../hooks/useConfig";
-import { ClipboardStatus } from "./clipboard-status";
 import { type HistoryItem, HistoryPanel } from "./history-panel";
 import { getPR } from "./utils/github-api";
 import { getIssue } from "./utils/linear-api";
@@ -21,32 +20,22 @@ export type Status =
   | "error";
 
 export const ClipboardWatcher = () => {
-  const { sendAlert } = useContext(AlertContext);
-  const { credentials, configValidation } = useContext(ConfigContext);
-  const { get, insert, clear, remove } = useConfig();
+  const { sendAlert } = use(AlertContext);
+  const {
+    credentials,
+    configValidation,
+    clipboardHistory,
+    refreshClipboardHistory,
+  } = use(ConfigContext);
+  const { insert, clear, remove } = useConfig();
 
   const [status, setStatus] = useState<Status>("idle");
-  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [activeItem, setActiveItem] = useState<string | undefined>();
 
   const resetStatus = useCallback(() => {
     setStatus("idle");
     setActiveItem(undefined);
   }, []);
-
-  const getHistory = useCallback(() => {
-    get<HistoryItem[]>("clipboard-watcher-history")
-      .then((history) => {
-        history && setHistory(history);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [get]);
-
-  useEffect(() => {
-    getHistory();
-  }, [getHistory]);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -65,7 +54,7 @@ export const ClipboardWatcher = () => {
         const parseResult = parseClipboard(text);
 
         if (parseResult) {
-          if (history.some((h) => h.id === parseResult.id)) {
+          if (clipboardHistory.some((h) => h.id === parseResult.id)) {
             setStatus("exists");
             setActiveItem(parseResult.id);
 
@@ -77,26 +66,26 @@ export const ClipboardWatcher = () => {
           if (parseResult.type === "linear") {
             getIssue(parseResult.id, credentials.linear)
               .then((item) => {
-                insert<HistoryItem>("clipboard-watcher-history", item)
-                  .then(() => getHistory())
+                insert<HistoryItem>("clipboard-history", item)
+                  .then(() => refreshClipboardHistory())
                   .catch((error) => {
                     console.error(error);
                   });
                 sendAlert({
                   type: "success",
-                  content: "Issue fetched successfully",
+                  content: "Issue fetched successfully.",
                 });
               })
               .catch((_) => {
-                sendAlert({ type: "error", content: "Failed to fetch issue" });
+                sendAlert({ type: "error", content: "Failed to fetch issue." });
                 setStatus("error");
               });
           }
 
           if (parseResult.type === "github") {
             const item = await getPR(text, credentials.github);
-            insert<HistoryItem>("clipboard-watcher-history", item)
-              .then(() => getHistory())
+            insert<HistoryItem>("clipboard-history", item)
+              .then(() => refreshClipboardHistory())
               .catch((error) => {
                 console.error(error);
               });
@@ -112,8 +101,8 @@ export const ClipboardWatcher = () => {
     return () => clearInterval(interval);
   }, [
     insert,
-    getHistory,
-    history,
+    clipboardHistory,
+    refreshClipboardHistory,
     resetStatus,
     status,
     configValidation.credentials.valid,
@@ -121,15 +110,23 @@ export const ClipboardWatcher = () => {
     sendAlert,
   ]);
 
-  const onItemClick = useCallback(async () => {
-    setStatus("copied");
+  const onItemClick = useCallback(
+    async (content: string) => {
+      setStatus("copied");
 
-    const timeout = setTimeout(() => {
-      resetStatus();
-    }, 2000);
+      sendAlert({
+        type: "success",
+        content,
+      });
 
-    return () => clearTimeout(timeout);
-  }, [resetStatus]);
+      const timeout = setTimeout(() => {
+        resetStatus();
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    },
+    [resetStatus, sendAlert],
+  );
 
   const handleRemove = useCallback(
     async (id: string) => {
@@ -138,10 +135,10 @@ export const ClipboardWatcher = () => {
         resetStatus();
       }
 
-      await remove("clipboard-watcher-history", id);
-      getHistory();
+      await remove("clipboard-history", id);
+      refreshClipboardHistory();
     },
-    [remove, getHistory, activeItem, resetStatus],
+    [remove, refreshClipboardHistory, activeItem, resetStatus],
   );
 
   return (
@@ -149,27 +146,22 @@ export const ClipboardWatcher = () => {
       header="Clipboard Watcher"
       headerIcon={<Clipboard size={16} />}
       headerRight={
-        <div className="flex flex-row items-center gap-2">
-          <ClipboardStatus status={status} />
-          <Button
-            small
-            disabled={
-              !configValidation.credentials.valid || history.length === 0
-            }
-            onClick={() => {
-              void clear("clipboard-watcher-history");
-              getHistory();
-            }}
-          >
-            Clear
-          </Button>
-        </div>
+        <Button
+          small
+          disabled={!configValidation.credentials.valid || history.length === 0}
+          onClick={() => {
+            void clear("clipboard-history");
+            refreshClipboardHistory();
+          }}
+        >
+          Clear
+        </Button>
       }
       content={
         <section className="flex flex-row gap-2 truncate">
           <div className="flex flex-1 flex-col gap-2 overflow-hidden">
             <HistoryPanel
-              history={history}
+              history={clipboardHistory}
               onItemClick={onItemClick}
               onRemoveClick={handleRemove}
               activeItem={activeItem}
