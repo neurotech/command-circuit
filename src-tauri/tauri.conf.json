@@ -34,7 +34,7 @@
     ],
     "linux": {
       "deb": {
-        "desktopTemplate": "./src-tauri/desktop-template.desktop"
+        "desktopTemplate": "./desktop-template.desktop"
       }
     }
   }
