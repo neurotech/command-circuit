@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "tauri:build:deb": "tauri build -b deb",
+    "posttauri:build:deb": "./post-bundle.sh",
     "preview": "vite preview",
-    "tauri": "NO_STRIP=true tauri",
+    "tauri": "GDK_BACKEND=x11 WEBKIT_DISABLE_COMPOSITING_MODE=1 WEBKIT_DISABLE_DMABUF_RENDERER=1 NO_STRIP=true TAURI_BUNDLER_NEW_APPIMAGE_FORMAT=true tauri",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
