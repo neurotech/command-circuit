@@ -3,6 +3,7 @@ import {
   type ReactNode,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -30,23 +31,25 @@ export const AlertContext = createContext<AlertContextType>(defaultValues);
 export const AlertProvider = ({ children }: { children: ReactNode }) => {
   const [alert, setAlert] = useState<AlertSchema>();
   const [active, setActive] = useState(false);
+  const activeRef = useRef(false);
 
-  const sendAlert = useCallback(
-    (alert: AlertSchema) => {
-      if (active) {
-        setActive(false);
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
-        setTimeout(() => {
-          setAlert(alert);
-          setActive(true);
-        }, 600);
-      } else {
+  const sendAlert = useCallback((alert: AlertSchema) => {
+    if (activeRef.current) {
+      setActive(false);
+
+      setTimeout(() => {
         setAlert(alert);
         setActive(true);
-      }
-    },
-    [active],
-  );
+      }, 600);
+    } else {
+      setAlert(alert);
+      setActive(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (active && alert) {

@@ -19,9 +19,9 @@ export const useKeyboardShortcut = ({
     if (!enabled) return;
 
     const listener = (event: KeyboardEvent) => {
-      const metaKeyMatches = metaKey ? event.metaKey : true;
+      const modifierMatches = metaKey ? event.metaKey || event.ctrlKey : true;
 
-      if (event.key === key && metaKeyMatches) {
+      if (event.key === key && modifierMatches) {
         handler();
       }
     };

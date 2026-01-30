@@ -84,8 +84,14 @@ export const ClipboardWatcher = () => {
               const item = await getPR(text, credentials.github);
               await insert<HistoryItem>("clipboard-history", item);
               await refreshClipboardHistory();
+              sendAlert({
+                type: "success",
+                content: "PR fetched successfully.",
+              });
             } catch (error) {
               console.error(error);
+              sendAlert({ type: "error", content: "Failed to fetch PR." });
+              setStatus("error");
             }
           }
         } else {

@@ -1,20 +1,10 @@
 "use client";
 
-import type { HTMLMotionProps, Transition, Variants } from "motion/react";
-import { motion, useAnimation } from "motion/react";
-import { useEffect } from "react";
+import type { Transition, Variants } from "motion/react";
+import { motion } from "motion/react";
 import { twMerge } from "tailwind-merge";
-
-export interface IconHandle {
-  startAnimation: () => void;
-  stopAnimation: () => void;
-}
-
-export interface IconProps extends HTMLMotionProps<"div"> {
-  size?: number;
-  duration?: number;
-  isAnimated?: boolean;
-}
+import type { IconProps } from "./types";
+import { useIconAnimation } from "./useIconAnimation";
 
 export const AnimatedTriangleAlert = ({
   className,
@@ -23,7 +13,7 @@ export const AnimatedTriangleAlert = ({
   isAnimated = false,
   ...props
 }: IconProps) => {
-  const controls = useAnimation();
+  const controls = useIconAnimation(isAnimated);
 
   const defaultTransition: Transition = {
     type: "spring",
@@ -70,14 +60,6 @@ export const AnimatedTriangleAlert = ({
     },
   };
 
-  useEffect(() => {
-    if (isAnimated) {
-      controls.start("animate");
-    } else {
-      controls.start("normal");
-    }
-  }, [isAnimated, controls]);
-
   return (
     <motion.div
       className={"inline-flex items-center justify-center"}
@@ -98,7 +80,7 @@ export const AnimatedTriangleAlert = ({
         variants={iconVariants}
         className={twMerge("", className)}
       >
-        <title>Animated Circle Check Icon</title>
+        <title>Animated Triangle Alert Icon</title>
         <motion.path
           d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
           className={"opacity-55"}

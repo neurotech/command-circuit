@@ -5,6 +5,7 @@ import {
   type ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import type { HistoryItem } from "../features/clipboard-watcher/history-panel";
@@ -193,29 +194,46 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
     refreshClipboardHistory();
   }, [refreshClipboardHistory]);
 
-  return (
-    <ConfigContext
-      value={{
-        configDialogOpen,
-        toggleConfigDialog,
-        configValidation,
-        validateConfig,
-        credentials,
-        saveCredentials,
-        getCredentials,
-        loading,
-        todayIsLater,
-        clipboardHistory,
-        refreshClipboardHistory,
-        debugMode,
-        toggleDebugMode,
-        discordTimestampVisible,
-        toggleDiscordTimestampVisible,
-        fancyTextVisible,
-        toggleFancyTextVisible,
-      }}
-    >
-      {children}
-    </ConfigContext>
+  const contextValue = useMemo(
+    () => ({
+      configDialogOpen,
+      toggleConfigDialog,
+      configValidation,
+      validateConfig,
+      credentials,
+      saveCredentials,
+      getCredentials,
+      loading,
+      todayIsLater,
+      clipboardHistory,
+      refreshClipboardHistory,
+      debugMode,
+      toggleDebugMode,
+      discordTimestampVisible,
+      toggleDiscordTimestampVisible,
+      fancyTextVisible,
+      toggleFancyTextVisible,
+    }),
+    [
+      configDialogOpen,
+      toggleConfigDialog,
+      configValidation,
+      validateConfig,
+      credentials,
+      saveCredentials,
+      getCredentials,
+      loading,
+      todayIsLater,
+      clipboardHistory,
+      refreshClipboardHistory,
+      debugMode,
+      toggleDebugMode,
+      discordTimestampVisible,
+      toggleDiscordTimestampVisible,
+      fancyTextVisible,
+      toggleFancyTextVisible,
+    ],
   );
+
+  return <ConfigContext value={contextValue}>{children}</ConfigContext>;
 };

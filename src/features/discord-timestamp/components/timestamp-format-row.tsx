@@ -1,6 +1,4 @@
-import { Copy } from "lucide-react";
-import { twMerge } from "tailwind-merge";
-import { FlatButton } from "../../../components/ui/flat-button";
+import { CopyableRow } from "../../../components/ui/copyable-row";
 
 interface TimestampFormatRowProps {
   preview: string;
@@ -14,16 +12,12 @@ export const TimestampFormatRow = ({
   className,
 }: TimestampFormatRowProps) => {
   return (
-    <FlatButton
-      variant="yellow"
-      onClick={onCopy}
-      className={twMerge(
-        `flex grow-0 items-center justify-between px-2 py-4 text-xs`,
-        className,
-      )}
+    <CopyableRow
+      onCopy={onCopy}
+      ariaLabel={`Copy ${preview}`}
+      className={`grow-0 text-xs ${className ?? ""}`}
     >
       {preview}
-      <Copy size={14} />
-    </FlatButton>
+    </CopyableRow>
   );
 };

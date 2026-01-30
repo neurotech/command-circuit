@@ -13,10 +13,12 @@ export const useToggle = (key: ConfigKey, defaultValue: boolean) => {
   }, [get, key, defaultValue]);
 
   const toggle = useCallback(async () => {
-    const newValue = !value;
-    await update(key, newValue);
-    setValue(newValue);
-  }, [update, key, value]);
+    setValue((prev) => {
+      const newValue = !prev;
+      void update(key, newValue);
+      return newValue;
+    });
+  }, [update, key]);
 
   useEffect(() => {
     load();

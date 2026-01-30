@@ -1,6 +1,4 @@
-import { Copy } from "lucide-react";
-import { twMerge } from "tailwind-merge";
-import { FlatButton } from "../../../components/ui/flat-button";
+import { CopyableRow } from "../../../components/ui/copyable-row";
 
 interface StyledTextRowProps {
   preview: string;
@@ -18,17 +16,13 @@ export const StyledTextRow = ({
   className,
 }: StyledTextRowProps) => {
   return (
-    <FlatButton
-      variant="yellow"
-      onClick={onCopy}
+    <CopyableRow
+      onCopy={onCopy}
       disabled={disabled}
-      className={twMerge(
-        "flex items-center justify-between px-2 py-4",
-        className,
-      )}
+      ariaLabel={`Copy ${name} text`}
+      className={className}
     >
       <p className="truncate text-sm">{preview === "" ? name : preview}</p>
-      <Copy size={14} />
-    </FlatButton>
+    </CopyableRow>
   );
 };

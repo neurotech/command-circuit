@@ -1,25 +1,20 @@
-import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { Eye, EyeClosed, Type } from "lucide-react";
 import { use, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { TextInput } from "../../components/ui/text-input";
-import { AlertContext } from "../../context/alert-context";
 import { ConfigContext } from "../../context/config-context";
+import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import { StyledTextRow } from "./components/styled-text-row";
 import { TEXT_STYLES } from "./utils/unicode-mappings";
 
 export const TextFormatter = () => {
-  const { sendAlert } = use(AlertContext);
   const { fancyTextVisible, toggleFancyTextVisible } = use(ConfigContext);
+  const { copy } = useCopyToClipboard();
   const [inputText, setInputText] = useState("");
 
   const handleCopy = (styleName: string, styledText: string) => {
-    void writeText(styledText);
-    sendAlert({
-      type: "success",
-      content: `Copied ${styleName} to clipboard!`,
-    });
+    void copy(styledText, `Copied ${styleName} to clipboard!`);
   };
 
   return (

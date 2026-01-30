@@ -7,12 +7,10 @@ const flatButtonVariants = cva(
   {
     variants: {
       variant: {
-        red: " hover:not-disabled:bg-red-400 hover:not-disabled:text-red-950",
-        yellow:
-          " hover:not-disabled:bg-yellow-400 hover:not-disabled:text-yellow-950",
-        green:
-          " hover:not-disabled:bg-emerald-400 hover:not-disabled:text-emerald-950",
-        blue: " hover:not-disabled:bg-blue-400 hover:not-disabled:text-blue-950",
+        red: "enabled:hover:bg-red-400 enabled:hover:text-red-950",
+        yellow: "enabled:hover:bg-yellow-400 enabled:hover:text-yellow-950",
+        green: "enabled:hover:bg-emerald-400 enabled:hover:text-emerald-950",
+        blue: "enabled:hover:bg-blue-400 enabled:hover:text-blue-950",
       },
     },
     defaultVariants: {

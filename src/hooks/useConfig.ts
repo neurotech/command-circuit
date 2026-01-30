@@ -38,8 +38,8 @@ export const useConfig = () => {
   const get = useCallback(
     async <T>(key: ConfigKey): Promise<T | undefined> => {
       if (!store) return undefined;
-      const value = (await store.get(key)) ?? [];
-      return value as T;
+      const value = await store.get<T>(key);
+      return value;
     },
     [store],
   );

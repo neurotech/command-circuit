@@ -1,5 +1,3 @@
-import { writeText } from "@tauri-apps/plugin-clipboard-manager";
-
 import {
   AlarmClock,
   CalendarClock,
@@ -17,13 +15,13 @@ import { Card } from "../../components/ui/card";
 import { FlatButton } from "../../components/ui/flat-button";
 import { StatusPanel } from "../../components/ui/status-panel";
 import { TextArea } from "../../components/ui/textarea";
-import { AlertContext } from "../../context/alert-context";
 import { ConfigContext } from "../../context/config-context";
+import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import { useGreeting } from "./hooks/useGreeting";
 
 export const GoodMorning = () => {
-  const { sendAlert } = use(AlertContext);
   const { todayIsLater } = use(ConfigContext);
+  const { copy } = useCopyToClipboard();
   const { greeting, rerollGreeting } = useGreeting();
   const [yesterday, setYesterday] = useState("");
   const [today, setToday] = useState("");
@@ -61,7 +59,11 @@ export const GoodMorning = () => {
       header="Good Morning"
       headerIcon={<AlarmClock size={16} />}
       headerRight={
-        <Button small onClick={() => setShow(!show)}>
+        <Button
+          small
+          onClick={() => setShow(!show)}
+          aria-label={show ? "Hide widget" : "Show widget"}
+        >
           {show ? <Eye size={14} /> : <EyeClosed size={14} />}
         </Button>
       }
@@ -110,10 +112,12 @@ export const GoodMorning = () => {
                   variant={"green"}
                   className="rounded-bl-sm"
                   onClick={regenerateGreeting}
+                  aria-label="Regenerate greeting"
                 >
                   <RefreshCw
                     className={regenerate ? "animate-spin" : ""}
                     size={14}
+                    aria-hidden="true"
                   />
                 </FlatButton>
 
@@ -121,14 +125,11 @@ export const GoodMorning = () => {
                   variant={"yellow"}
                   disabled={pristine}
                   onClick={() => {
-                    sendAlert({
-                      type: "success",
-                      content: "Copied gm message to clipboard!",
-                    });
-                    void writeText(gm.trim());
+                    void copy(gm.trim(), "Copied gm message to clipboard!");
                   }}
+                  aria-label="Copy message to clipboard"
                 >
-                  <Copy size={14} />
+                  <Copy size={14} aria-hidden="true" />
                 </FlatButton>
               </div>
 
@@ -143,8 +144,9 @@ export const GoodMorning = () => {
                   setYesterday("");
                   setToday("");
                 }}
+                aria-label="Clear all fields"
               >
-                <TriangleAlert size={14} />
+                <TriangleAlert size={14} aria-hidden="true" />
               </FlatButton>
             </div>
           </div>

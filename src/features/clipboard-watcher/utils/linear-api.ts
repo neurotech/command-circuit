@@ -23,8 +23,8 @@ export const getIssue = async (
   }
 
   const query = `
-    query {
-      issue(id: "${key}") {
+    query GetIssue($id: String!) {
+      issue(id: $id) {
         title
         url
         state {
@@ -33,7 +33,7 @@ export const getIssue = async (
       }
     }
   `;
-  const body = JSON.stringify({ query });
+  const body = JSON.stringify({ query, variables: { id: key } });
 
   const response = await fetch("https://api.linear.app/graphql", {
     method: "POST",

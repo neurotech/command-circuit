@@ -1,20 +1,10 @@
 "use client";
 
-import type { HTMLMotionProps, Variants } from "motion/react";
-import { motion, useAnimation } from "motion/react";
-import { useEffect } from "react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
 import { twMerge } from "tailwind-merge";
-
-export interface IconHandle {
-  startAnimation: () => void;
-  stopAnimation: () => void;
-}
-
-export interface IconProps extends HTMLMotionProps<"div"> {
-  size?: number;
-  duration?: number;
-  isAnimated?: boolean;
-}
+import type { IconProps } from "./types";
+import { useIconAnimation } from "./useIconAnimation";
 
 export const AnimatedCircleCheck = ({
   className,
@@ -23,7 +13,7 @@ export const AnimatedCircleCheck = ({
   isAnimated = false,
   ...props
 }: IconProps) => {
-  const controls = useAnimation();
+  const controls = useIconAnimation(isAnimated);
 
   const iconVariants: Variants = {
     normal: {
@@ -62,14 +52,6 @@ export const AnimatedCircleCheck = ({
       },
     },
   };
-
-  useEffect(() => {
-    if (isAnimated) {
-      controls.start("animate");
-    } else {
-      controls.start("normal");
-    }
-  }, [isAnimated, controls]);
 
   return (
     <motion.div

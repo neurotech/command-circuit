@@ -1,19 +1,18 @@
-import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { format } from "date-fns";
 import { Clock, Eye, EyeClosed, RotateCcw } from "lucide-react";
 import { use, useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { TextInput } from "../../components/ui/text-input";
-import { AlertContext } from "../../context/alert-context";
 import { ConfigContext } from "../../context/config-context";
+import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import { TimestampFormatRow } from "./components/timestamp-format-row";
 import { DISCORD_FORMATS, getDiscordTimestamp } from "./utils/discord-formats";
 
 export const DiscordTimestamp = () => {
-  const { sendAlert } = use(AlertContext);
   const { discordTimestampVisible, toggleDiscordTimestampVisible } =
     use(ConfigContext);
+  const { copy } = useCopyToClipboard();
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
 
@@ -35,11 +34,7 @@ export const DiscordTimestamp = () => {
   const handleCopy = (code: string) => {
     if (!selectedDateTime) return;
     const timestamp = getDiscordTimestamp(selectedDateTime, code);
-    void writeText(timestamp);
-    sendAlert({
-      type: "success",
-      content: `Copied ${timestamp} to clipboard!`,
-    });
+    void copy(timestamp, `Copied ${timestamp} to clipboard!`);
   };
 
   return (
@@ -48,10 +43,14 @@ export const DiscordTimestamp = () => {
       headerIcon={<Clock size={16} />}
       headerRight={
         <div className="flex gap-1">
-          <Button small onClick={setToNow}>
+          <Button small onClick={setToNow} aria-label="Reset to current time">
             <RotateCcw size={14} />
           </Button>
-          <Button small onClick={toggleDiscordTimestampVisible}>
+          <Button
+            small
+            onClick={toggleDiscordTimestampVisible}
+            aria-label={discordTimestampVisible ? "Hide widget" : "Show widget"}
+          >
             {discordTimestampVisible ? (
               <Eye size={14} />
             ) : (
