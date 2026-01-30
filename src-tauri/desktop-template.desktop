@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=Work
+Comment=A tool for making your work life easier.
+Exec=~/tools/command-circuit/command-circuit
+StartupWMClass=command-circuit
+Icon=command-circuit
+Name=Command Circuit
+Terminal=false
+Type=Application
