@@ -18,7 +18,7 @@ export const TimestampFormatRow = ({
       variant="yellow"
       onClick={onCopy}
       className={twMerge(
-        `flex grow-0 items-center justify-between px-2 py-4 text-sm`,
+        `flex grow-0 items-center justify-between px-2 py-4 text-xs`,
         className,
       )}
     >

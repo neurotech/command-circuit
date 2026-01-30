@@ -5,13 +5,14 @@ import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { TextInput } from "../../components/ui/text-input";
 import { AlertContext } from "../../context/alert-context";
+import { ConfigContext } from "../../context/config-context";
 import { StyledTextRow } from "./components/styled-text-row";
 import { TEXT_STYLES } from "./utils/unicode-mappings";
 
 export const TextFormatter = () => {
   const { sendAlert } = use(AlertContext);
+  const { fancyTextVisible, toggleFancyTextVisible } = use(ConfigContext);
   const [inputText, setInputText] = useState("");
-  const [show, setShow] = useState(true);
 
   const handleCopy = (styleName: string, styledText: string) => {
     void writeText(styledText);
@@ -26,11 +27,11 @@ export const TextFormatter = () => {
       header="Fancy Text"
       headerIcon={<Type size={16} />}
       headerRight={
-        <Button small onClick={() => setShow(!show)}>
-          {show ? <Eye size={14} /> : <EyeClosed size={14} />}
+        <Button small onClick={toggleFancyTextVisible}>
+          {fancyTextVisible ? <Eye size={14} /> : <EyeClosed size={14} />}
         </Button>
       }
-      hideContent={!show}
+      hideContent={!fancyTextVisible}
       content={
         <div className="flex flex-col gap-3">
           <div className="flex flex-row items-center justify-between gap-2">

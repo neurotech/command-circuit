@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { HistoryItem } from "../features/clipboard-watcher/history-panel";
 import { useConfig } from "../hooks/useConfig";
+import { useToggle } from "../hooks/useToggle";
 
 type ConfigValidationSchema = {
   credentials: {
@@ -43,6 +44,12 @@ type ConfigContextType = {
 
   debugMode: boolean;
   toggleDebugMode: () => void;
+
+  discordTimestampVisible: boolean;
+  toggleDiscordTimestampVisible: () => void;
+
+  fancyTextVisible: boolean;
+  toggleFancyTextVisible: () => void;
 };
 
 const defaultValues = {
@@ -71,6 +78,12 @@ const defaultValues = {
 
   debugMode: false,
   toggleDebugMode: () => {},
+
+  discordTimestampVisible: false,
+  toggleDiscordTimestampVisible: () => {},
+
+  fancyTextVisible: false,
+  toggleFancyTextVisible: () => {},
 };
 
 export const ConfigContext = createContext<ConfigContextType>(defaultValues);
@@ -79,7 +92,15 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
   const { get, update } = useConfig();
 
   const [loading, setLoading] = useState(defaultValues.loading);
-  const [debugMode, setDebugMode] = useState(defaultValues.debugMode);
+  const [debugMode, toggleDebugMode] = useToggle("debug-mode", false);
+  const [discordTimestampVisible, toggleDiscordTimestampVisible] = useToggle(
+    "discord-timestamp-visible",
+    false,
+  );
+  const [fancyTextVisible, toggleFancyTextVisible] = useToggle(
+    "fancy-text-visible",
+    false,
+  );
 
   const [configDialogOpen, setConfigDialogOpen] = useState(
     defaultValues.configDialogOpen,
@@ -99,21 +120,6 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
   const toggleConfigDialog = useCallback(() => {
     setConfigDialogOpen((prev) => !prev);
   }, []);
-
-  const getDebugModeValue = useCallback(async () => {
-    setLoading(true);
-    const debugMode = (await get<boolean>("debug-mode")) || false;
-    setDebugMode(debugMode);
-    setLoading(false);
-
-    return debugMode;
-  }, [get]);
-
-  const toggleDebugMode = useCallback(async () => {
-    const value = await getDebugModeValue();
-    await update("debug-mode", !value);
-    setDebugMode(!value);
-  }, [update, getDebugModeValue]);
 
   const validateConfig = useCallback(async () => {
     const isGitHubValid =
@@ -172,10 +178,6 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
   }, [get]);
 
   useEffect(() => {
-    getDebugModeValue();
-  }, [getDebugModeValue]);
-
-  useEffect(() => {
     getCredentials();
   }, [getCredentials]);
 
@@ -207,6 +209,10 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
         refreshClipboardHistory,
         debugMode,
         toggleDebugMode,
+        discordTimestampVisible,
+        toggleDiscordTimestampVisible,
+        fancyTextVisible,
+        toggleFancyTextVisible,
       }}
     >
       {children}

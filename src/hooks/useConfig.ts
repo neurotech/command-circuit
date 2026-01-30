@@ -7,7 +7,9 @@ type ConfigKey =
   | "github-api-key"
   | "linear-api-key"
   | "today"
-  | "debug-mode";
+  | "debug-mode"
+  | "discord-timestamp-visible"
+  | "fancy-text-visible";
 
 export const useConfig = () => {
   const [store, setStore] = useState<Store | undefined>();
@@ -71,6 +73,8 @@ export const useConfig = () => {
             "github-api-key": "",
             today: undefined,
             "debug-mode": false,
+            "discord-timestamp-visible": false,
+            "fancy-text-visible": false,
           },
         });
         setStore(store);

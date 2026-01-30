@@ -6,14 +6,16 @@ import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { TextInput } from "../../components/ui/text-input";
 import { AlertContext } from "../../context/alert-context";
+import { ConfigContext } from "../../context/config-context";
 import { TimestampFormatRow } from "./components/timestamp-format-row";
 import { DISCORD_FORMATS, getDiscordTimestamp } from "./utils/discord-formats";
 
 export const DiscordTimestamp = () => {
   const { sendAlert } = use(AlertContext);
+  const { discordTimestampVisible, toggleDiscordTimestampVisible } =
+    use(ConfigContext);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
-  const [show, setShow] = useState(true);
 
   const setToNow = useCallback(() => {
     const now = new Date();
@@ -49,12 +51,16 @@ export const DiscordTimestamp = () => {
           <Button small onClick={setToNow}>
             <RotateCcw size={14} />
           </Button>
-          <Button small onClick={() => setShow(!show)}>
-            {show ? <Eye size={14} /> : <EyeClosed size={14} />}
+          <Button small onClick={toggleDiscordTimestampVisible}>
+            {discordTimestampVisible ? (
+              <Eye size={14} />
+            ) : (
+              <EyeClosed size={14} />
+            )}
           </Button>
         </div>
       }
-      hideContent={!show}
+      hideContent={!discordTimestampVisible}
       content={
         <div className="flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-3 text-sm">
