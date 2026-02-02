@@ -19,6 +19,10 @@ import { ConfigContext } from "../../context/config-context";
 import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 import { useGreeting } from "./hooks/useGreeting";
 
+const ButtonText = ({ children }: { children: React.ReactNode }) => (
+  <span className="font-medium text-xs">{children}</span>
+);
+
 export const GoodMorning = () => {
   const { todayIsLater } = use(ConfigContext);
   const { copy } = useCopyToClipboard();
@@ -72,7 +76,6 @@ export const GoodMorning = () => {
       content={
         <div className="justify-baseline flex h-full select-none flex-col gap-4">
           <TextArea
-            className="h-1/4"
             label={
               <div className="flex items-center justify-between gap-1">
                 <p>{"What did you do yesterday?"}</p>
@@ -83,7 +86,6 @@ export const GoodMorning = () => {
             onChange={(e) => setYesterday(e.target.value)}
           />
           <TextArea
-            className="h-1/4"
             label={
               <div className="flex items-center justify-between gap-1">
                 <p>{"What are you planning to do today?"}</p>
@@ -94,23 +96,11 @@ export const GoodMorning = () => {
             onChange={(e) => setToday(e.target.value)}
           />
           <div className="flex flex-1 select-none flex-col justify-between">
-            {pristine ? (
-              <StatusPanel
-                animate
-                status={"dark"}
-                statusText={greeting.message}
-                className="h-full rounded-t-sm rounded-b-none p-2"
-              />
-            ) : (
-              <Markdown className="pointer-events-none flex min-h-18 flex-1 flex-col gap-2 rounded-t-sm border border-zinc-900/60 bg-zinc-900/40 p-2 text-shadow-2xs text-xs/5 text-zinc-400 leading-relaxed [&_a]:text-indigo-400 [&_a]:underline [&_code,&_a]:no-underline [&_code]:rounded-sm [&_code]:bg-zinc-900 [&_code]:px-1 [&_code]:py-px [&_code]:text-zinc-300/90 [&_ul]:list-inside [&_ul]:list-disc">
-                {gm}
-              </Markdown>
-            )}
-            <div className="flex justify-between rounded-b-sm border border-zinc-900/60 border-t-0 bg-zinc-600/30">
-              <div className="flex gap-px rounded-bl-sm bg-zinc-900/30">
+            <div className="flex justify-between rounded-t-sm border border-zinc-900/60 border-b-0 bg-zinc-600/30">
+              <div className="flex gap-px rounded-tl-sm bg-zinc-900/30">
                 <FlatButton
                   variant={"green"}
-                  className="rounded-bl-sm"
+                  className="gap-1.5 rounded-tl-sm"
                   onClick={regenerateGreeting}
                   aria-label="Regenerate greeting"
                 >
@@ -119,17 +109,21 @@ export const GoodMorning = () => {
                     size={14}
                     aria-hidden="true"
                   />
+                  <ButtonText>Regenerate</ButtonText>
                 </FlatButton>
 
                 <FlatButton
                   variant={"yellow"}
+                  className="gap-1.5"
                   disabled={pristine}
                   onClick={() => {
                     void copy(gm.trim(), "Copied gm message to clipboard!");
+                    setShow(false);
                   }}
                   aria-label="Copy message to clipboard"
                 >
                   <Copy size={14} aria-hidden="true" />
+                  <ButtonText>Copy</ButtonText>
                 </FlatButton>
               </div>
 
@@ -137,7 +131,7 @@ export const GoodMorning = () => {
 
               <FlatButton
                 variant={"red"}
-                className="rounded-br-sm"
+                className="gap-1.5 rounded-tr-sm"
                 disabled={pristine}
                 onClick={() => {
                   rerollGreeting();
@@ -146,9 +140,22 @@ export const GoodMorning = () => {
                 }}
                 aria-label="Clear all fields"
               >
+                <ButtonText>Reset</ButtonText>
                 <TriangleAlert size={14} aria-hidden="true" />
               </FlatButton>
             </div>
+            {pristine ? (
+              <StatusPanel
+                animate
+                status={"dark"}
+                statusText={greeting.message}
+                className="h-full rounded-t-none rounded-b-sm p-2"
+              />
+            ) : (
+              <Markdown className="pointer-events-none flex min-h-18 flex-1 flex-col gap-2 rounded-b-sm border border-zinc-900/60 bg-zinc-900/40 p-2 text-shadow-2xs text-xs/5 text-zinc-400 leading-relaxed [&_a]:text-indigo-400 [&_a]:underline [&_code,&_a]:no-underline [&_code]:rounded-sm [&_code]:bg-zinc-900 [&_code]:px-1 [&_code]:py-px [&_code]:text-zinc-300/90 [&_ul]:list-inside [&_ul]:list-disc">
+                {gm}
+              </Markdown>
+            )}
           </div>
         </div>
       }
