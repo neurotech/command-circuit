@@ -30,6 +30,7 @@
 
 @theme {
   --font-display: Suisse, "sans-serif";
+  --text-2xs: 0.625rem;
   --shadow-hr: 0 -1px 1px rgba(0, 0, 0, 0.25);
   --animate-fade-in: fade-in 400ms ease backwards;
   --animate-fade-out: fade-out 400ms ease forwards;

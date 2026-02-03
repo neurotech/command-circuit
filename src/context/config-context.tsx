@@ -38,6 +38,10 @@ type ConfigContextType = {
   saveCredentials: (credentials: Credentials) => Promise<void>;
   getCredentials: () => Promise<void>;
 
+  waygateUrl: string | undefined;
+  saveWaygateUrl: (url: string) => Promise<void>;
+  getWaygateUrl: () => Promise<void>;
+
   todayIsLater: boolean;
 
   clipboardHistory: HistoryItem[];
@@ -71,6 +75,10 @@ const defaultValues = {
   },
   saveCredentials: async () => {},
   getCredentials: async () => {},
+
+  waygateUrl: undefined,
+  saveWaygateUrl: async () => {},
+  getWaygateUrl: async () => {},
 
   todayIsLater: false,
 
@@ -111,6 +119,9 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
   );
   const [credentials, setCredentials] = useState<Credentials>(
     defaultValues.credentials,
+  );
+  const [waygateUrl, setWaygateUrl] = useState<string | undefined>(
+    defaultValues.waygateUrl,
   );
   const [clipboardHistory, setClipboardHistory] = useState<HistoryItem[]>(
     defaultValues.clipboardHistory,
@@ -159,6 +170,22 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
     [update],
   );
 
+  const getWaygateUrl = useCallback(async () => {
+    setLoading(true);
+    const url = (await get<string>("waygate-url")) || "";
+    setLoading(false);
+    setWaygateUrl(url);
+  }, [get]);
+
+  const saveWaygateUrl = useCallback(
+    async (url: string) => {
+      setLoading(true);
+      await update("waygate-url", url);
+      setLoading(false);
+    },
+    [update],
+  );
+
   const computeTodayIsLater = useCallback(async () => {
     const existing = (await get<string>("today")) || "";
 
@@ -183,6 +210,10 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
   }, [getCredentials]);
 
   useEffect(() => {
+    getWaygateUrl();
+  }, [getWaygateUrl]);
+
+  useEffect(() => {
     validateConfig();
   }, [validateConfig]);
 
@@ -203,6 +234,9 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       credentials,
       saveCredentials,
       getCredentials,
+      waygateUrl,
+      saveWaygateUrl,
+      getWaygateUrl,
       loading,
       todayIsLater,
       clipboardHistory,
@@ -222,6 +256,9 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       credentials,
       saveCredentials,
       getCredentials,
+      waygateUrl,
+      saveWaygateUrl,
+      getWaygateUrl,
       loading,
       todayIsLater,
       clipboardHistory,

@@ -104,7 +104,6 @@ export const HistoryPanel = ({
                       isActive && "bg-amber-200/50",
                     )}
                   />
-
                   {item.id}
                 </div>
                 <div

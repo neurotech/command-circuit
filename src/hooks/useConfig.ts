@@ -6,6 +6,7 @@ type ConfigKey =
   | "clipboard-history"
   | "github-api-key"
   | "linear-api-key"
+  | "waygate-url"
   | "today"
   | "debug-mode"
   | "discord-timestamp-visible"
@@ -71,6 +72,7 @@ export const useConfig = () => {
             "clipboard-history": [],
             "linear-api-key": "",
             "github-api-key": "",
+            "waygate-url": "",
             today: undefined,
             "debug-mode": false,
             "discord-timestamp-visible": false,

@@ -11,6 +11,7 @@ import { ConfigDialog } from "../features/config/config-dialog";
 import { DiscordTimestamp } from "../features/discord-timestamp/discord-timestamp";
 import { GoodMorning } from "../features/good-morning/good-morning";
 import { TextFormatter } from "../features/text-formatter/text-formatter";
+import { Waygate } from "../features/waygate/waygate";
 import { useKeyboardShortcut } from "../hooks/useKeyboardShortcut";
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
         </button>
       ) : null}
       <main className="relative flex flex-1 flex-col gap-2 overflow-y-auto p-2">
+        <Waygate />
         <ClipboardWatcher />
         <DiscordTimestamp />
         <TextFormatter />

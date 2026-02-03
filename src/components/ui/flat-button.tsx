@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 import { twMerge } from "tailwind-merge";
 
 const flatButtonVariants = cva(
-  "flex cursor-pointer items-center bg-zinc-700 h-6 px-2 py-1 text-zinc-300 transition-colors disabled:bg-zinc-700/20 disabled:from-zinc-800/50 disabled:to-zinc-800 disabled:text-zinc-950/50 disabled:cursor-not-allowed",
+  "flex cursor-pointer items-center bg-zinc-700 px-2 py-1 text-zinc-300 transition-colors disabled:bg-zinc-700/20 disabled:from-zinc-800/50 disabled:to-zinc-800 disabled:text-zinc-950/50 disabled:cursor-not-allowed",
   {
     variants: {
       variant: {

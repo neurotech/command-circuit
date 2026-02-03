@@ -5,6 +5,7 @@ import { useKeyboardShortcut } from "../../hooks/useKeyboardShortcut";
 import { Credentials } from "./components/credentials";
 import { DebugMode } from "./components/debug-mode";
 import { Navigation } from "./components/navigation";
+import { Waygate } from "./components/waygate";
 
 export const ConfigDialog = () => {
   const [activeItem, setActiveItem] = useState<number>(1);
@@ -15,7 +16,9 @@ export const ConfigDialog = () => {
     switch (activeItem) {
       case 1:
         return <Credentials />;
-      case 3:
+      case 2:
+        return <Waygate />;
+      case 4:
         return <DebugMode />;
       default:
         return null;
