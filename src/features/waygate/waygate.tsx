@@ -11,6 +11,7 @@ type WaygateItem = {
   id: number;
   item: string;
   title: string;
+  favicon: string;
 };
 
 type FetchStatus = "idle" | "loading" | "success" | "error";
@@ -45,8 +46,10 @@ export const Waygate = () => {
 
   const deleteItem = useCallback(
     async (id: number) => {
+      setStatus("loading");
       try {
         await invoke("delete_waygate_item", { url: waygateUrl, id });
+        setStatus("success");
         setItems((prev) => prev.filter((item) => item.id !== id));
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
@@ -86,7 +89,6 @@ export const Waygate = () => {
               <span className="text-sm">{error}</span>
             </div>
           )}
-
           {status === "loading" || items.length === 0 ? (
             <div className="py-2 text-center text-sm text-zinc-500">
               Watching...
@@ -110,13 +112,20 @@ export const Waygate = () => {
                     onClick={() => void openUrl(item.item)}
                     className="w-full rounded-r-xs"
                   >
-                    <div className="grid w-full grid-cols-5 items-center">
-                      <span className="col-span-3 truncate text-left font-medium text-xs">
-                        {item.title}
-                      </span>
-                      <span className="col-span-2 truncate text-ellipsis text-left font-mono text-2xs opacity-60">
-                        {item.item}
-                      </span>
+                    <div className="flex w-full items-center gap-2">
+                      <img
+                        src={item.favicon}
+                        alt="Favicon"
+                        className="size-3 shrink-0"
+                      />
+                      <div className="grid w-full grid-cols-5 items-center">
+                        <span className="col-span-3 truncate text-left font-medium text-xs">
+                          {item.title}
+                        </span>
+                        <span className="col-span-2 truncate text-ellipsis text-right font-mono text-2xs opacity-60">
+                          {item.item}
+                        </span>
+                      </div>
                     </div>
                   </FlatButton>
                 </div>

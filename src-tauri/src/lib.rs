@@ -5,6 +5,7 @@ pub struct WaygateItem {
     id: i64,
     item: String,
     title: String,
+    favicon: String,
 }
 
 #[tauri::command]
@@ -21,7 +22,10 @@ async fn fetch_waygate_items(url: String) -> Result<Vec<WaygateItem>, String> {
         return Err(format!(
             "HTTP {}: {}",
             response.status().as_u16(),
-            response.status().canonical_reason().unwrap_or("Unknown error")
+            response
+                .status()
+                .canonical_reason()
+                .unwrap_or("Unknown error")
         ));
     }
 
@@ -44,7 +48,10 @@ async fn delete_waygate_item(url: String, id: i64) -> Result<(), String> {
         return Err(format!(
             "HTTP {}: {}",
             response.status().as_u16(),
-            response.status().canonical_reason().unwrap_or("Unknown error")
+            response
+                .status()
+                .canonical_reason()
+                .unwrap_or("Unknown error")
         ));
     }
 
@@ -59,7 +66,10 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![fetch_waygate_items, delete_waygate_item])
+        .invoke_handler(tauri::generate_handler![
+            fetch_waygate_items,
+            delete_waygate_item
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
