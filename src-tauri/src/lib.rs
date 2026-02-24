@@ -5,7 +5,7 @@ pub struct WaygateItem {
     id: i64,
     item: String,
     title: String,
-    favicon: String,
+    favicon: Option<String>,
 }
 
 #[tauri::command]

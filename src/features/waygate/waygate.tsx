@@ -11,7 +11,7 @@ type WaygateItem = {
   id: number;
   item: string;
   title: string;
-  favicon: string;
+  favicon: string | null;
 };
 
 type FetchStatus = "idle" | "loading" | "success" | "error";
@@ -113,11 +113,13 @@ export const Waygate = () => {
                     className="w-full rounded-r-xs"
                   >
                     <div className="flex w-full items-center gap-2">
-                      <img
-                        src={item.favicon}
-                        alt="Favicon"
-                        className="size-3 shrink-0"
-                      />
+                      {item.favicon && (
+                        <img
+                          src={item.favicon}
+                          alt="Favicon"
+                          className="size-3 shrink-0"
+                        />
+                      )}
                       <div className="grid w-full grid-cols-5 items-center">
                         <span className="col-span-3 truncate text-left font-medium text-xs">
                           {item.title}
