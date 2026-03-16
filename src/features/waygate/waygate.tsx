@@ -89,13 +89,7 @@ export const Waygate = () => {
               <span className="text-sm">{error}</span>
             </div>
           )}
-          {status === "loading" || items.length === 0 ? (
-            <div className="py-2 text-center text-sm text-zinc-500">
-              Watching...
-            </div>
-          ) : null}
-
-          {items.length > 0 && (
+          {items.length > 0 ? (
             <div className="flex flex-col gap-1">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-px">
@@ -132,6 +126,10 @@ export const Waygate = () => {
                   </FlatButton>
                 </div>
               ))}
+            </div>
+          ) : (
+            <div className="py-2 text-center text-sm text-zinc-500">
+              Watching...
             </div>
           )}
         </div>
