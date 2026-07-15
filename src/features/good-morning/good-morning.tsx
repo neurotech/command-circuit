@@ -73,6 +73,7 @@ export const GoodMorning = () => {
       }
       fillHeight={show}
       hideContent={!show}
+      toggleShow={() => setShow(!show)}
       content={
         <div className="justify-baseline flex h-full select-none flex-col gap-4">
           <TextArea

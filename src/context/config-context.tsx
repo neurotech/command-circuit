@@ -50,9 +50,6 @@ type ConfigContextType = {
   debugMode: boolean;
   toggleDebugMode: () => void;
 
-  discordTimestampVisible: boolean;
-  toggleDiscordTimestampVisible: () => void;
-
   fancyTextVisible: boolean;
   toggleFancyTextVisible: () => void;
 };
@@ -88,9 +85,6 @@ const defaultValues = {
   debugMode: false,
   toggleDebugMode: () => {},
 
-  discordTimestampVisible: false,
-  toggleDiscordTimestampVisible: () => {},
-
   fancyTextVisible: false,
   toggleFancyTextVisible: () => {},
 };
@@ -102,10 +96,6 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
 
   const [loading, setLoading] = useState(defaultValues.loading);
   const [debugMode, toggleDebugMode] = useToggle("debug-mode", false);
-  const [discordTimestampVisible, toggleDiscordTimestampVisible] = useToggle(
-    "discord-timestamp-visible",
-    false,
-  );
   const [fancyTextVisible, toggleFancyTextVisible] = useToggle(
     "fancy-text-visible",
     false,
@@ -188,16 +178,17 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
 
   const computeTodayIsLater = useCallback(async () => {
     const existing = (await get<string>("today")) || "";
+    const now = format(new Date(), "yyyy-MM-dd");
 
     if (existing !== "") {
-      const now = format(new Date(), "yyyy-MM-dd");
       const isLater = compareAsc(new Date(), new Date(existing)) === 1;
-
       setTodayIsLater(isLater);
-      await update("today", now);
     } else {
       setTodayIsLater(false);
     }
+
+    // Always persist the current day so the next launch can detect a new day.
+    await update("today", now);
   }, [get, update]);
 
   const refreshClipboardHistory = useCallback(async () => {
@@ -243,8 +234,6 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       refreshClipboardHistory,
       debugMode,
       toggleDebugMode,
-      discordTimestampVisible,
-      toggleDiscordTimestampVisible,
       fancyTextVisible,
       toggleFancyTextVisible,
     }),
@@ -265,8 +254,6 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
       refreshClipboardHistory,
       debugMode,
       toggleDebugMode,
-      discordTimestampVisible,
-      toggleDiscordTimestampVisible,
       fancyTextVisible,
       toggleFancyTextVisible,
     ],

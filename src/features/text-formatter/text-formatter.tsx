@@ -26,6 +26,7 @@ export const TextFormatter = () => {
           {fancyTextVisible ? <Eye size={14} /> : <EyeClosed size={14} />}
         </Button>
       }
+      toggleShow={() => toggleFancyTextVisible()}
       hideContent={!fancyTextVisible}
       content={
         <div className="flex flex-col gap-3">

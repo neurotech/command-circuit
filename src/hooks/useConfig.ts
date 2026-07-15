@@ -9,7 +9,6 @@ type ConfigKey =
   | "waygate-url"
   | "today"
   | "debug-mode"
-  | "discord-timestamp-visible"
   | "fancy-text-visible";
 
 export const useConfig = () => {
@@ -75,7 +74,6 @@ export const useConfig = () => {
             "waygate-url": "",
             today: undefined,
             "debug-mode": false,
-            "discord-timestamp-visible": false,
             "fancy-text-visible": false,
           },
         });

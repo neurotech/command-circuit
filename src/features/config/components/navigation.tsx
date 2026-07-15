@@ -1,10 +1,4 @@
-import {
-  Cog,
-  DoorOpen,
-  Fingerprint,
-  Logs,
-  type LucideProps,
-} from "lucide-react";
+import { Cog, DoorOpen, Fingerprint, type LucideProps } from "lucide-react";
 import { type ForwardRefExoticComponent, type RefAttributes, use } from "react";
 import { Button } from "../../../components/ui/button";
 import { ConfigContext } from "../../../context/config-context";
@@ -26,7 +20,6 @@ export type NavigationItem = {
 const navigationItems: NavigationItem[] = [
   { id: 1, icon: Fingerprint, label: "Credentials" },
   { id: 2, icon: DoorOpen, label: "Waygate" },
-  { id: 3, icon: Logs, label: "Logs" },
   { id: 4, icon: Cog, label: "Debug" },
 ];
 

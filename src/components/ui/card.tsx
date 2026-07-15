@@ -8,6 +8,7 @@ interface CardProps {
   headerRight?: ReactNode;
   hideContent?: boolean;
   fillHeight?: boolean;
+  toggleShow?: () => void;
 }
 
 export const Card = ({
@@ -17,6 +18,7 @@ export const Card = ({
   headerRight,
   hideContent = false,
   fillHeight = false,
+  toggleShow,
 }: CardProps) => {
   return (
     <div
@@ -26,12 +28,25 @@ export const Card = ({
       )}
     >
       <header className="flex select-none justify-between p-2">
-        <h1 className="flex items-center gap-2 text-md text-white">
-          {headerIcon ? (
-            <div className="text-zinc-400">{headerIcon}</div>
-          ) : null}
-          {header}
-        </h1>
+        {toggleShow ? (
+          <button
+            type="button"
+            onClick={toggleShow}
+            className="flex flex-1 cursor-pointer items-center gap-2 text-left text-md text-white"
+          >
+            {headerIcon ? (
+              <div className="text-zinc-400">{headerIcon}</div>
+            ) : null}
+            {header}
+          </button>
+        ) : (
+          <h1 className="flex items-center gap-2 text-md text-white">
+            {headerIcon ? (
+              <div className="text-zinc-400">{headerIcon}</div>
+            ) : null}
+            {header}
+          </h1>
+        )}
         {headerRight ? (
           <div className="flex items-center">{headerRight}</div>
         ) : null}

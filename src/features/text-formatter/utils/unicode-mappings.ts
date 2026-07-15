@@ -179,7 +179,7 @@ const smallCapsMap: CharMap = {
   u: "\u1D1C",
   v: "\u1D20",
   w: "\u1D21",
-  x: "\u1D431", // Using mathematical small x
+  // No dedicated small-caps glyph exists for "x"; fall through to plain "x".
   y: "\u028F",
   z: "\u1D22",
 };
