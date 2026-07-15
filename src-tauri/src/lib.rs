@@ -8,8 +8,25 @@ pub struct WaygateItem {
     favicon: Option<String>,
 }
 
+/// Validate and normalize a user-supplied base URL, rejecting anything that is
+/// not an http(s) URL so we never issue requests to unexpected schemes/hosts.
+fn validate_base_url(url: &str) -> Result<String, String> {
+    let parsed = reqwest::Url::parse(url).map_err(|e| format!("Invalid URL: {}", e))?;
+
+    if !matches!(parsed.scheme(), "http" | "https") {
+        return Err(format!("Unsupported URL scheme: {}", parsed.scheme()));
+    }
+
+    if parsed.host_str().is_none() {
+        return Err("URL is missing a host".to_string());
+    }
+
+    Ok(url.trim_end_matches('/').to_string())
+}
+
 #[tauri::command]
 async fn fetch_waygate_items(url: String) -> Result<Vec<WaygateItem>, String> {
+    let url = validate_base_url(&url)?;
     let client = reqwest::Client::new();
     let response = client
         .get(format!("{}/items", url))
@@ -37,6 +54,7 @@ async fn fetch_waygate_items(url: String) -> Result<Vec<WaygateItem>, String> {
 
 #[tauri::command]
 async fn delete_waygate_item(url: String, id: i64) -> Result<(), String> {
+    let url = validate_base_url(&url)?;
     let client = reqwest::Client::new();
     let response = client
         .delete(format!("{}/items/{}", url, id))
