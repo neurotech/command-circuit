@@ -32,16 +32,23 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
   const [alert, setAlert] = useState<AlertSchema>();
   const [active, setActive] = useState(false);
   const activeRef = useRef(false);
+  const deferRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     activeRef.current = active;
   }, [active]);
 
+  useEffect(() => {
+    return () => clearTimeout(deferRef.current);
+  }, []);
+
   const sendAlert = useCallback((alert: AlertSchema) => {
+    clearTimeout(deferRef.current);
+
     if (activeRef.current) {
       setActive(false);
 
-      setTimeout(() => {
+      deferRef.current = setTimeout(() => {
         setAlert(alert);
         setActive(true);
       }, 600);
