@@ -64,7 +64,7 @@ export const HistoryPanel = ({
   return (
     <div className="flex select-none flex-col gap-0.5">
       {history.length === 0 ? <EmptyHistory /> : null}
-      {history
+      {[...history]
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .map((item) => {
           const Icon = item.type === "linear" ? SquareKanban : GitPullRequest;

@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getGitHubMetadata, getPR } from "./github-api";
+
+const mockFetch = vi.fn();
+
+vi.mock("@tauri-apps/plugin-http", () => ({
+  fetch: mockFetch,
+}));
+
+const { getGitHubMetadata, getPR } = await import("./github-api");
 
 describe("getGitHubMetadata", () => {
   it("extracts owner, repo, and id from PR URL", () => {
@@ -20,14 +27,11 @@ describe("getGitHubMetadata", () => {
 });
 
 describe("getPR", () => {
-  const mockFetch = vi.fn();
-
   beforeEach(() => {
-    vi.stubGlobal("fetch", mockFetch);
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    vi.unstubAllGlobals();
     vi.resetAllMocks();
   });
 

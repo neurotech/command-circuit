@@ -37,6 +37,14 @@ export const ClipboardWatcher = () => {
     setActiveItem(undefined);
   }, []);
 
+  // A transient fetch failure sets "error", which pauses clipboard processing.
+  // Clear it automatically so the watcher recovers without user interaction.
+  useEffect(() => {
+    if (status !== "error") return;
+    const timeout = setTimeout(() => setStatus("idle"), 5000);
+    return () => clearTimeout(timeout);
+  }, [status]);
+
   useEffect(() => {
     const interval = setInterval(async () => {
       if (!configValidation.credentials.valid) {
@@ -68,6 +76,7 @@ export const ClipboardWatcher = () => {
               const item = await getIssue(parseResult.id, credentials.linear);
               await insert<HistoryItem>("clipboard-history", item);
               await refreshClipboardHistory();
+              setStatus("idle");
               sendAlert({
                 type: "success",
                 content: "Issue fetched successfully.",
@@ -81,9 +90,13 @@ export const ClipboardWatcher = () => {
 
           if (parseResult.type === "github") {
             try {
-              const item = await getPR(text, credentials.github);
+              const item = await getPR(
+                parseResult.url ?? text,
+                credentials.github,
+              );
               await insert<HistoryItem>("clipboard-history", item);
               await refreshClipboardHistory();
+              setStatus("idle");
               sendAlert({
                 type: "success",
                 content: "PR fetched successfully.",
@@ -123,11 +136,9 @@ export const ClipboardWatcher = () => {
         content,
       });
 
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         resetStatus();
       }, 2000);
-
-      return () => clearTimeout(timeout);
     },
     [resetStatus, sendAlert],
   );

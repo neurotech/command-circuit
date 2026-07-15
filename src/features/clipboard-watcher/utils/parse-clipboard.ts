@@ -3,9 +3,10 @@ import { getGitHubMetadata } from "./github-api";
 type Result = {
   type: "linear" | "github";
   id: string;
+  url?: string;
 };
 
-const linearRegex = /(ENG-|PAY-)\d+/;
+const linearRegex = /(ENG-|PAY-|QA-|DES-)\d+/;
 const gitHubRegex =
   /https:\/\/github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\/pull\/[0-9]+/;
 
@@ -27,6 +28,7 @@ export const parseClipboard = (text: string): Result | null => {
     return {
       type: "github",
       id: `PR-${id}`,
+      url: gitHubMatch[0],
     };
   }
 

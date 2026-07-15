@@ -17,6 +17,20 @@ describe("parseClipboard", () => {
       expect(result).toEqual({ type: "linear", id: "PAY-456" });
     });
 
+    it("parses QA- issue keys from Linear URLs", () => {
+      const result = parseClipboard(
+        "https://linear.app/team/issue/QA-789/quality-issue",
+      );
+      expect(result).toEqual({ type: "linear", id: "QA-789" });
+    });
+
+    it("parses DES- issue keys from Linear URLs", () => {
+      const result = parseClipboard(
+        "https://linear.app/team/issue/DES-101/design-issue",
+      );
+      expect(result).toEqual({ type: "linear", id: "DES-101" });
+    });
+
     it("handles issue keys with large numbers", () => {
       const result = parseClipboard(
         "https://linear.app/team/issue/ENG-99999/big-number",
@@ -28,21 +42,44 @@ describe("parseClipboard", () => {
   describe("GitHub PR URLs", () => {
     it("parses GitHub PR URLs", () => {
       const result = parseClipboard("https://github.com/owner/repo/pull/123");
-      expect(result).toEqual({ type: "github", id: "PR-123" });
+      expect(result).toEqual({
+        type: "github",
+        id: "PR-123",
+        url: "https://github.com/owner/repo/pull/123",
+      });
     });
 
     it("handles repos with hyphens and underscores", () => {
       const result = parseClipboard(
         "https://github.com/some-owner/my_repo-name/pull/456",
       );
-      expect(result).toEqual({ type: "github", id: "PR-456" });
+      expect(result).toEqual({
+        type: "github",
+        id: "PR-456",
+        url: "https://github.com/some-owner/my_repo-name/pull/456",
+      });
     });
 
     it("handles large PR numbers", () => {
       const result = parseClipboard(
         "https://github.com/facebook/react/pull/99999",
       );
-      expect(result).toEqual({ type: "github", id: "PR-99999" });
+      expect(result).toEqual({
+        type: "github",
+        id: "PR-99999",
+        url: "https://github.com/facebook/react/pull/99999",
+      });
+    });
+
+    it("extracts a clean URL when trailing content is present", () => {
+      const result = parseClipboard(
+        "https://github.com/owner/repo/pull/123\n\nsome notes",
+      );
+      expect(result).toEqual({
+        type: "github",
+        id: "PR-123",
+        url: "https://github.com/owner/repo/pull/123",
+      });
     });
   });
 
